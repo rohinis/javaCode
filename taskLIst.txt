@@ -22,3 +22,5 @@ qmgr -c " set server pbs_license_info = 6200@ip-172-31-28-122.ap-south-1.compute
 qmgr -c " set server job_history_enable = True "
 
 qmgr -c " set server acl_roots += root "
+
+Shiva branch 
