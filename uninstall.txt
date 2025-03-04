@@ -1,0 +1,100 @@
+ cd /opt/altair/pbsworks/2025.2.0/access
+
+ ./Change_Altair_Access_Installation
+
+ cd /opt/
+ rm -rf altair/
+ cd /var/spool/
+ rm -rf pbsworks/
+
+
+cd /home/BUILDS/
+ 
+
+rm -rf AltairAccessWeb_*
+
+AltairAccessWeb_2025.2.0_1339_20240620_155454.bin
+
+
+scp root@10.75.22.62:/home/BUILDS/Access2025.2.0/AltairAccessWeb_2025.2.0_1407_20240803_112014.bin .
+
+chmod 777 AltairAccessWeb_*
+
+
+6200@172.16.80.44  	 
+
+aws - 6200@172.31.31.239
+
+
+cd /opt/momclientmodules/
+ll
+rm -rf momclientmodules/
+
+cd /opt/altair/pbsworks/2025.2.0/access/exec/joboperation/scripts  
+
+/opt/altair/pbsworks/2025.2.0/access/exec/pas/python/python distribute_modern_comm_modules.py
+
+/opt/momclientmodules/
+	
+105 - rohini    49 - samita   36 - rohini   53 - samita   62 - pbsworks  142- pbsworks 20-pbsworks
+
+pbsadmin
+
+
+cd /var/spool/pbsworks/2025.2.0/access/home/data/pas/targets/localhost/profiles
+
+pwd
+
+ll
+
+rm -rf pbsadmin/ 
+
+rm -rf pbsworks/ 
+
+
+cd /home/BUILDS/TestVMs/
+
+./cleanStage.sh 
+
+./itarate.sh
+
+
+./copyAppDefs.sh
+
+
+/etc/init.d/pbsworks-pa status
+
+
+/etc/init.d/pbsworks-pa start
+
+
+
+/etc/init.d/pbsworks-pa stop
+
+
+
+/etc/init.d/pbsworks-pa restart
+
+
+91- pbsadmin
+testperf1
+
+/opt/VirtualGL/bin/glxinfo -display :0 -c
+
+
+sed -i "s/[0-9].*M/256M/gI" $PA_HOME/config/shared/deployment-config.yml
+
+
+source /etc/pbsworks-pa.conf
+
+cd $PA_EXEC/desktop/scripts/
+
+bash ./pbs_server_graphics_configure.sh
+
+
+
+
+yum -y install epel-release
+
+
+yum -y install xsel

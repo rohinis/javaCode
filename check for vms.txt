@@ -1,0 +1,17 @@
+blrvm9vm3	172.16.80.41
+blrvm9vm18
+blrvm9vm5   172.16.80.91
+blrvm23vm14	172.16.80.33
+
+
+
+blrvm18vm20
+blrvm18vm21
+	
+blrvm18vm5 172.16.80.27
+blrec15-vm22-RHEL8
+
+10.75.12.63
+
+
+Sagarika Roy Choudhury

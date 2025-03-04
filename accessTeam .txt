@@ -1,0 +1,26 @@
+EDS --- gowri 
+
+Samistha - PAD - RVS 
+Manju - Access - Remote viz 
+Sudha - Shiva - Access + Auto 
+Ravi - PAS 
+
+Access needs to be model automaion project 
+for shift left 
+mocks - to build skelton 
+
+
+next goal 
+automate with build 1 
+
+automation per
+
+weekly meeting 
+autoamtion per 
+new automation 
+
+follow process  , test caes , requiremnt travebility , bug linked 
+
+test cases marked as manula and automated
+
+automation 

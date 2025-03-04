@@ -1,0 +1,24 @@
+AIE
+Windows
+LInux
+HW Integration 
+Xray update 
+
+ systemctl status pbsworks-pa.service
+
+
+ The most common IP version assigned by ISPs.
+ 
+ 171.48.97.9
+
+
+	echo " PATH=$PATH:/opt/pbs/bin" >> /etc/profile
+
+	source /etc/profile
+
+
+qmgr -c " set server pbs_license_info = 6200@ip-172-31-28-122.ap-south-1.compute.internal "
+
+qmgr -c " set server job_history_enable = True "
+
+qmgr -c " set server acl_roots += root "

@@ -1,0 +1,127 @@
+text ~ "tab" AND reporter in (currentUser())
+===============================================================================================
+project = AD AND issue in testRepositoryFolder(AD, " /Access Web/App Composer ")
+
+
+Test Repository
+/
+Access Web/App Composer
+Test Type
+Manual
+
+
+===============================================================================================
+
+
+/usr/bin/gedit "${Open File}"
+
+
+notepad "${Open File}"
+
+
+mspaint "${Open File}"
+
+cmd /C mspaint --- win 11 
+
+
+/opt/2021.2/altair//scripts/hvp `basename ${Open File}`
+
+/opt/2019.1.0.11/altair/scripts/hvp `basename ${Open File}`
+===============================================================================================
+
+
+Verified in https://jira.prog.altair.com/browse/AD-5450
+
+
+
+
+Verified in AD-6217 2025.1.0 - RemoteViz - Test Execution - Windows - BUILD - 1684
+
+
+Verified in AD-6218 2025.1.0 - RemoteViz - Test Execution - Linux - BUILD - 1684
+
+
+
+
+
+notepad "${Open File}"
+
+Verified the document.
+
+100
+accessuser2
+
+Accessuser@azure
+
+text ~ "active session" AND reporter in (currentUser())
+
+
+2022.1 - RemoteViz - Test Execution - BUILD - 
+
+==============================================================
+AIE  Windows - Edit Sessions : On reconnecting to a active session 'Connection to remote desktop was lost. Preparing to reconnect...' statys forever
+
+When the user tries to reconnect to a active session the 'Connection to remote desktop was lost. Preparing to reconnect...' stays on the page forever until we refresh the browser.
+This is observed only in sessions launched from Drive
+
+The same works fine on sessions that are launched using stand alone access  in the same AIE env.
+
+View All Sessions
+
+
+
+==============================================================
+
+The user is logged out when the session is unshared when he is presenter.
+
+When the owner unshares a session the other user is logged out.
+This is observed only when user is the made the presenter by the owner.
+
+
+Launch a session as user1
+Share the session with user2
+Make user2 as presenter 
+Unshare the session with user2 
+Check is user2 is still logged in.
+
+
+
+
+
+
+==============================================================
+
+
+COpy huge data to the clipboard 
+paste in notepad ++ in server 
+copy another set of huge data from local machine 
+paste in clipboard of the session where data was copied in step 1 
+scroll up and down in the clipboard 
+check the data
+
+Throughput
+FPS
+Bitrate
+Latency
+
+
+Verified , working as expceted .
+
+expceted
+.
+
+
+
+3964
+
+
+4029
+
+
+
+clear
+
+lsof -p 10989| wc - l
+
+lsof -p 11066 | wc - l
+

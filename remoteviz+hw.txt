@@ -1,0 +1,35 @@
+1.	PA-8525: Mouse pointer icon doesnt update after adjusting browser width and moving the cursor to graphics area - generic - mouse pointer tc 
+
+
+
+2.	PA-8521 : Context Menu invoked from browser doesnt fit within screen - element - contextmenu -sheet 
+
+
+
+3.	PA-8527 : PBS ACCESS : Pan the model icon not showing as expected , instead of pan icon some other icon showing - generic - mouse pointer tc - pan function 
+
+
+
+
+
+4.	PA-8526 : PBS Access : Pan the model there is a lag between mouse curser and model movement - performance issue 
+
+
+
+
+5.	PA-8524 : PBS Access: Unable to launch HG Trans and HV Trans from the file menu
+post - tc - 24
+
+
+
+
+6.	PA-8530 : PBS Access : The default Line thickness and Header font are incorrect for HG Session - post -tc -15
+
+
+7.	PA-8531 : PBS Access : The default size of the "Define curves" dialog is very large as compared to the desktop application - post - tc -14 
+
+
+8.	PA-8532 : PBS Access: The View cube goes behind the Legend by default in Hyperview when we apply the results - post - tc - 7
+
+
+9.	PA-8533 : PBS Access : The background and text color does not get applied instantly for tableview - post - tc - 20 

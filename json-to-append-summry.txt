@@ -1,0 +1,40 @@
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.io.File;
+import java.io.IOException;
+
+public class UpdateJsonFile {
+    public static void main(String[] args) {
+        String filePath = "data.json"; // Path to JSON file
+        String keyToUpdate = "summary";   // Key to update
+        String newValue = "Sample summry ";  // New value
+
+        updateJsonValue(filePath, keyToUpdate, newValue);
+    }
+
+    public static void updateJsonValue(String filePath, String key, String newValue) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        File file = new File(filePath);
+
+        try {
+            // Read JSON file into JsonNode
+            JsonNode rootNode = objectMapper.readTree(file);
+
+            if (rootNode.isObject()) {
+                // Modify the existing key-value pair
+                ((ObjectNode) rootNode).put(key, newValue);
+
+                // Write updated JSON back to file
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, rootNode);
+
+                System.out.println("Updated JSON successfully!");
+            } else {
+                System.out.println("Root is not a JSON object!");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

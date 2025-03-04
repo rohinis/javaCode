@@ -1,0 +1,260 @@
+
+package xRayExtentUitility;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+
+
+public class JsonUtils {
+
+	static String inputFile=null;
+	static String outputFile=null;
+	static String mergedReportName=null;
+	static String CurrentUserDir=null;
+	//static String extentVersion=null;
+	//
+	static String xrayJsonContent=null;
+	
+	  public static void main(String[] args) {
+	  
+			String extentVersion = args[0];
+			 String reportName=null;
+			 String userDirectory=null;
+			reportName=args[1];
+			//String xrayJsonContent=null;
+
+			userDirectory = System.getProperty("user.dir");
+			System.out.println("userDirectory - "+userDirectory);
+			System.out.println("reportname - "+reportName);
+			System.out.println("extentVersion - "+extentVersion);
+			convertHTMLtoJson(userDirectory,extentVersion,reportName);
+			
+	  }
+	 
+	
+	public static void convertHTMLtoJson(String userDirectory,String extentVersion,String reportName)
+	{
+		mergedReportName=reportName;
+		CurrentUserDir=userDirectory;
+		File folder = new File(userDirectory);
+		if (folder.exists() && folder.isDirectory()) {
+			File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".html"));
+
+			if (files != null && files.length > 0) {
+				
+				System.out.println("===========================================================");
+				System.out.println("Converting HTMl reports to corresponding JSON files");
+				
+				for (File file : files) 
+				{
+					System.out.print("*");
+					inputFile=file.getName();
+					//System.out.println("reading input file name - "+inputFile);
+					xrayJsonContent= extentReportToXrayJson(inputFile, extentVersion);
+					inputFile=inputFile.toLowerCase();
+					String[] splitStringArray = inputFile.split(".html");
+					outputFile= splitStringArray[0];
+					outputFile=outputFile+".json";
+					try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8))) 
+					{
+						writer.write(xrayJsonContent);
+					}
+					catch (IOException e) 
+					{
+						e.printStackTrace();
+					}
+				}
+			} else {
+				System.out.println("No .json files found in the directory.");
+			}
+		}
+
+
+
+		System.out.println('\n');
+		System.out.println("All the HTML reports converted to corresponding JSON files");
+		System.out.println("===========================================================");
+		
+		
+
+		System.out.println("Calling merge JSON now ");
+		
+		try {
+			mergeJson();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	
+	private static String extentReportToXrayJson(String htmlFile, String extentVersion) {
+		//System.out.println("Received file: " + htmlFile);
+		String htmlContent;
+		try {
+			htmlContent = new String(Files.readAllBytes(Paths.get(htmlFile)), StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		Document doc = Jsoup.parse(htmlContent);
+
+		JSONObject xrayJson = new JSONObject();
+		JSONObject info = new JSONObject();
+		info.put("summary", "");
+		info.put("description", "");
+		info.put("testPlanKey", "DEMOX-15");
+		xrayJson.put("info", info);
+		xrayJson.put("tests", new JSONArray());
+
+		if (extentVersion.equals("5")) {
+			String[] summaryParts = htmlFile.split("/");
+			if (summaryParts.length > 0) {
+				xrayJson.getJSONObject("info").put("summary", summaryParts[summaryParts.length - 1]);
+			}
+
+			Elements testNodes = doc.select("li.test-item");
+
+			for (Element testNode : testNodes) {
+				if (testNode.attributes().size() < 6) {
+					continue;
+				}
+
+				String testId = testNode.attr("test-id");
+				String status = testNode.attr("status").toUpperCase();
+
+				Element failureReasonElement = testNode.selectFirst("textarea.code-block");
+				String failureReason = (failureReasonElement != null) ? failureReasonElement.text().trim() : "FAIL";
+
+				JSONObject testData = new JSONObject();
+				testData.put("testKey", testNode.attr("author"));
+				testData.put("status", status.equals("PASS") ? "PASSED" : "FAILED");
+				testData.put("comment", status.equals("PASS") ? "Successful Execution" : failureReason);
+
+				JSONArray evidences = new JSONArray();
+				JSONObject evidence = new JSONObject();
+				String imgFile = getImg(testNode);
+				if (imgFile != null)
+				{
+				evidence.put("data", convertImageToBase64(imgFile));
+				evidence.put("filename", imgFile);
+				}
+				else
+				{
+				evidence.put("data", "base64encodedimage==");
+				evidence.put("filename", "screenshot.png");
+				evidence.put("contentType", "image/png");
+				}
+				evidences.put(evidence);
+				testData.put("evidences", evidences);
+
+				xrayJson.getJSONArray("tests").put(testData);
+			}
+		}
+
+		return xrayJson.toString(4);
+	}
+
+
+
+	private static void mergeJson()throws IOException 
+	{
+
+		
+		//String jsonFilesDirPath = "C:\\Users\\rohinis\\eclipse-workspace\\test";
+		//String outputFileName = "Sanity_1684.json";
+		String fieldName = "tests";
+
+		Map<String, Object> output = new HashMap<>();
+		output.put(fieldName, new ArrayList<Object>());
+
+		File dir = new File(CurrentUserDir);
+		File[] files = dir.listFiles((d, name) -> name.endsWith(".json"));
+
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		if (files != null) {
+			for (File file : files) {
+				JsonNode data = objectMapper.readTree(file);
+				data.fields().forEachRemaining(entry -> {
+					if (!output.containsKey(entry.getKey())) {
+						output.put(entry.getKey(), entry.getValue());
+					}
+				});
+				List<Object> tests = (List<Object>) output.get(fieldName);
+				tests.addAll((List<Object>) objectMapper.convertValue(data.get(fieldName), List.class));
+			}
+		}
+
+		try (FileWriter reportFileName = new FileWriter(mergedReportName)) {
+			reportFileName.write(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(output));
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+			
+		}
+	}
+
+	
+	public static String convertImageToBase64(String imgFile) {
+		if (imgFile == null) {
+			return null;
+		}
+
+		Path path = Paths.get(imgFile);
+		if (Files.exists(path)) {
+			try {
+				byte[] fileContent = Files.readAllBytes(path);
+				return Base64.getEncoder().encodeToString(fileContent);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
+	public static String getImg(Element testNode) {
+		Element imgTag = testNode.selectFirst("img");
+		if (imgTag != null && imgTag.hasAttr("src")) {
+			return imgTag.attr("src");
+		}
+		return null;
+	}
+
+}
+
+
+class Config {
+	static String executionTicketId = "";
+	static String testPlanKey = "";
+	static String projectKey = "";
+}
+
+
